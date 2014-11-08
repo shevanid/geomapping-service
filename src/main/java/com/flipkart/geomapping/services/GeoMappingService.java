@@ -9,7 +9,6 @@ import org.activejpa.enhancer.ActiveJpaAgentLoader;
 import org.activejpa.jpa.JPA;
 
 import com.flipkart.geomapping.configurations.GeoMappingConfiguration;
-import com.flipkart.geomapping.resources.LocationResource;
 import com.flipkart.geomapping.resources.filters.JpaContextRequestFilter;
 import com.flipkart.geomapping.resources.filters.JpaContextResponseFilter;
 import com.hubspot.dropwizard.guice.GuiceBundle;

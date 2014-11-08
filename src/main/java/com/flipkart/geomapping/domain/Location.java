@@ -59,6 +59,7 @@ public class Location extends Model {
 	@JsonManagedReference("toLocation")
 	private Set<LocationRelation> toLocations = new HashSet<LocationRelation>();
 	
+	@Override
 	public Long getId() {
 		return id;
 	}
