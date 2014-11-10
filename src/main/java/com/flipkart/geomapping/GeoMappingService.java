@@ -1,4 +1,4 @@
-	package com.flipkart.geomapping.services;
+package com.flipkart.geomapping;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;

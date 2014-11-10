@@ -9,8 +9,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.activejpa.entity.Model;
-
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
 import com.flipkart.geomapping.domain.Location;
@@ -21,7 +19,7 @@ import com.google.inject.Singleton;
  *
  */
 	
-@Path("/")
+@Path("/location")
 @JsonSnakeCase
 @Produces({"application/json"})
 @Singleton
@@ -32,7 +30,7 @@ public class LocationResource {
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
 	public List<Location> getFacilities() {
-		return Model.all();
+		return Location.all();
 	}
 
 }
