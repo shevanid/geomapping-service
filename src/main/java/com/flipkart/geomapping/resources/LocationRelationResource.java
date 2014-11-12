@@ -6,41 +6,31 @@ import io.dropwizard.jackson.JsonSnakeCase;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
-import com.flipkart.geomapping.domain.Location;
+import com.flipkart.geomapping.domain.LocationRelation;
 import com.google.inject.Singleton;
 
 /**
- * @author deepak.shevani on Nov 7, 2014
+ * @author deepak.shevani on Nov 10, 2014
  *
  */
-	
-@Path("/locations")
+
+@Path("/location_relations")
 @JsonSnakeCase
 @Produces({"application/json"})
 @Singleton
-public class LocationResource {
+public class LocationRelationResource {
 	
 	@GET
     @Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
-	public List<Location> getAllLocations() {
-		return Location.all();
-	}
-	
-	@GET
-	@Path("/{id}")
-    @Timed
-    @ExceptionMetered()
-    @Produces(MediaType.APPLICATION_JSON)
-	public Location getLocationFor(@PathParam("id")Long id) {
-		return Location.findById(id);
+	public List<LocationRelation> getAllLocationRelations() {
+		return LocationRelation.all();
 	}
 
 }

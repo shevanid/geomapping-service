@@ -18,12 +18,10 @@ public class JpaContextRequestFilter implements ContainerRequestFilter {
         return null;
     }
 
-    
     public ContainerRequest filter(ContainerRequest containerRequest) {
         JPAContext context = getContext();
             if (context != null) {
                 context.getEntityManager();
-                //  contextCreated.set(true);
                 logger.info("Context Created");
             }
 

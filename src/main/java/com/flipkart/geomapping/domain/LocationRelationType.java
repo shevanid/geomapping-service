@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.activejpa.entity.Model;
+
 /**
  * @author deepak.shevani on Nov 7, 2014
  *
@@ -19,7 +21,7 @@ import javax.persistence.Table;
 @Table(name="location_relation_types")
 @Access(AccessType.FIELD)
 @JsonSnakeCase
-public class LocationRelationType {
+public class LocationRelationType extends Model {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

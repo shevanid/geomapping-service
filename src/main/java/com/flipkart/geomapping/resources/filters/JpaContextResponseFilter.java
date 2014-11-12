@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class JpaContextResponseFilter implements ContainerResponseFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(JpaContextRequestFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(JpaContextResponseFilter.class);
 
     protected JPAContext getContext() {
         if(JPA.instance.getDefaultConfig()!=null)
