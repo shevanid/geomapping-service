@@ -16,6 +16,10 @@ public class BaseEdge<T> {
 	
 	private T edge;
 	
+	/** Represents id **/
+	
+	private long id;
+	
 	/** Stores attributes specific to a group **/
 	
 	private Map<String, Map<String, Object>> attributes = new HashMap<String, Map<String, Object>>();
@@ -26,12 +30,21 @@ public class BaseEdge<T> {
 		
     }
 	
-	public BaseEdge(T edge) {
+	public BaseEdge(T edge, long id) {
         this.edge = edge;
+        this.id = id;
     }
 	
 	public T getEdge() {
 		return edge;
+	}
+	
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	public Map<String,Map<String, Object>> getAttributes() {

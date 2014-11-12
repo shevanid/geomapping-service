@@ -45,11 +45,6 @@ public class Location extends Model {
 	private LocationType type;
 	
 	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="locationId")
-	@JsonManagedReference("tag")
-	private Set<LocationTag> tags = new HashSet<LocationTag>();
-	
-	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="fromLocationId")
 	@JsonManagedReference("fromLocation")
 	private Set<LocationRelation> fromLocations = new HashSet<LocationRelation>();
@@ -83,14 +78,6 @@ public class Location extends Model {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
-	public Set<LocationTag> getTags() {
-		return tags;
-	}
-	
-	public void setTags(Set<LocationTag> tags) {
-		this.tags = tags;
-	}
 
 	public LocationType getType() {
 		return type;
@@ -98,6 +85,26 @@ public class Location extends Model {
 
 	public void setType(LocationType type) {
 		this.type = type;
+	}
+	
+	public Set<LocationRelation> getFromLocations() {
+		return fromLocations;
+	}
+
+	public void setFromLocations(Set<LocationRelation> fromLocations) {
+		this.fromLocations = fromLocations;
+	}
+
+	public Set<LocationRelation> getToLocations() {
+		return toLocations;
+	}
+
+	public void setToLocations(Set<LocationRelation> toLocations) {
+		this.toLocations = toLocations;
+	}
+
+	public String toString() {
+		return "{" + id + ":" + name + "}";
 	}
 	
 	@Override

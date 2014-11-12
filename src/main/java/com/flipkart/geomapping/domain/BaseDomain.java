@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.flipkart.geomapping.domain;
 
 /**

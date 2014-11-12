@@ -16,18 +16,31 @@ public class BaseVertex<T> {
 	
 	private T node;
 	
+	/** Represents id **/
+	
+	private long id;
+	
 	/** Stores attributes specific to a group **/
 	
 	private Map<String, Map<String, Object>> attributes;
 	
 	/** Constructor **/
 	
-	public BaseVertex(T node) {
+	public BaseVertex(T node, long id) {
         this.node = node;
+        this.id = id;
     }
 
 	public T getNode() {
 		return node;
+	}
+	
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public Map<String, Map<String, Object>> getAttributes() {

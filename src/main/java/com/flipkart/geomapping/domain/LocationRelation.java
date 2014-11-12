@@ -2,18 +2,14 @@ package com.flipkart.geomapping.domain;
 
 import io.dropwizard.jackson.JsonSnakeCase;
 
-import java.util.Set;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.activejpa.entity.Model;
@@ -38,11 +34,7 @@ public class LocationRelation extends Model {
 	private Long fromLocationId;
 
     private Long toLocationId;
-    
-    @OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="locationTagId")
-	private Set<LocationRelationTag> tags;
-    
+
 	@ManyToOne
 	@JoinColumn(name="fromLocationId", insertable = false, updatable = false)
 	@JsonManagedReference("fromLocation")
@@ -59,14 +51,6 @@ public class LocationRelation extends Model {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-	
-	public Set<LocationRelationTag> getTags() {
-		return tags;
-	}
-
-	public void setTags(Set<LocationRelationTag> tags) {
-		this.tags = tags;
 	}
 
 	public Location getFromLocation() {
