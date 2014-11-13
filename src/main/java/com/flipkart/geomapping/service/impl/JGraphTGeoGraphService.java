@@ -2,6 +2,7 @@ package com.flipkart.geomapping.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +35,16 @@ public class JGraphTGeoGraphService implements GeoGraphService {
 		return sb.toString();
 	}
 	
+	public Map<String, Location> getParentsForLocation(Long id) {
+		Map<String, Location> parents = new HashMap<String, Location>();
+		Node<Location> node = locationMap.get(id);
+		while (node.getParent() != null) {
+			parents.put(node.getParent().getNode().getType().getType(), node.getParent().getNode());
+			node = node.getParent();
+		}
+		return parents;
+	}
+	
 	public List<Location> getLocationsByName(String name) {
 		return Location.where("name", name);
 	}
@@ -48,6 +59,29 @@ public class JGraphTGeoGraphService implements GeoGraphService {
 			return null;
 		}
 		return locations.get(0);
+	}
+	
+	public List<Location> getChildrenForLocationId(Long id) {
+		List<Location> locations = new ArrayList<Location>();		
+		Node<Location> node = locationMap.get(id);
+		if (node != null) {
+			for (Node<Location> child : node.getChildren()) {
+				locations.add(child.getNode());
+				locations.addAll(getChildrenForLocationId(child.getNode().getId()));
+			}
+		}
+		return locations;
+	}
+	
+	public List<Location> getSpecificChildrenForLocationId(Long id, String name) {
+		List<Location> locations = getChildrenForLocationId(id);
+		Iterator<Location> it = locations.iterator();
+		while (it.hasNext()) {
+			if (!it.next().getType().getType().equalsIgnoreCase(name)) {
+				it.remove();
+			}
+		}
+		return locations;
 	}
 	
 	private void printSubTree(Node<Location> node, StringBuffer sb) {
@@ -80,6 +114,7 @@ public class JGraphTGeoGraphService implements GeoGraphService {
 		for (LocationRelation r : childRelations) {
 			Node<Location> childNode = new Node<Location>(r.getFromLocation());
 			locationMap.put(r.getFromLocation().getId(), childNode);
+			childNode.setParent(node);
 			node.addChild(childNode);
 			generateSubTreeFor(childNode);
 		}
@@ -88,6 +123,7 @@ public class JGraphTGeoGraphService implements GeoGraphService {
 	class Node<T> {
 		private T node;
 		private Map<String, Map<String, Object>> attributes = new HashMap<String, Map<String, Object>>();
+		private Node<T> parent = null;
 		private List<Node<T>> children = new ArrayList<Node<T>>();
 		public Node(T node) {
 			this.node = node;
@@ -97,6 +133,12 @@ public class JGraphTGeoGraphService implements GeoGraphService {
 		}
 		public List<Node<T>> getChildren() {
 			return children;
+		}
+		public Node<T> getParent() {
+			return parent;
+		}
+		public void setParent(Node<T> parent) {
+			this.parent = parent;
 		}
 		public T getNode() {
 			return node;

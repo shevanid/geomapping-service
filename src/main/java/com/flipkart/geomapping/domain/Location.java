@@ -1,5 +1,7 @@
 package com.flipkart.geomapping.domain;
 
+import io.dropwizard.jackson.JsonSnakeCase;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,6 +9,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,11 +18,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import io.dropwizard.jackson.JsonSnakeCase;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import org.activejpa.entity.Model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * @author deepak.shevani on Nov 7, 2014
@@ -44,14 +47,16 @@ public class Location extends Model {
 	@JoinColumn(name="locationTypeId")
 	private LocationType type;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="fromLocationId")
 	@JsonManagedReference("fromLocation")
+	@JsonIgnoreProperties
 	private Set<LocationRelation> fromLocations = new HashSet<LocationRelation>();
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="toLocationId")
 	@JsonManagedReference("toLocation")
+	@JsonIgnoreProperties
 	private Set<LocationRelation> toLocations = new HashSet<LocationRelation>();
 	
 	@Override
@@ -87,6 +92,7 @@ public class Location extends Model {
 		this.type = type;
 	}
 	
+	@JsonIgnore
 	public Set<LocationRelation> getFromLocations() {
 		return fromLocations;
 	}
@@ -95,6 +101,7 @@ public class Location extends Model {
 		this.fromLocations = fromLocations;
 	}
 
+	@JsonIgnore
 	public Set<LocationRelation> getToLocations() {
 		return toLocations;
 	}

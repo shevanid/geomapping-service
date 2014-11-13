@@ -5,9 +5,11 @@ package com.flipkart.geomapping.domain;
  *
  */
 
-import org.activejpa.entity.Model;
-import javax.persistence.MappedSuperclass;
 import java.sql.Timestamp;
+
+import javax.persistence.MappedSuperclass;
+
+import org.activejpa.entity.Model;
 
 @MappedSuperclass
 public abstract class BaseDomain extends Model {

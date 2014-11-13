@@ -1,8 +1,8 @@
 package com.flipkart.geomapping.resources;
 
-import java.util.List;
-
 import io.dropwizard.jackson.JsonSnakeCase;
+
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

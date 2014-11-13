@@ -1,8 +1,8 @@
 package com.flipkart.geomapping.resources;
 
-import java.util.List;
-
 import io.dropwizard.jackson.JsonSnakeCase;
+
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -35,12 +35,25 @@ public class LocationResource {
 	}
 	
 	@GET
-	@Path("/{id}")
+	@Path("/id/{id}")
     @Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
-	public Location getLocationFor(@PathParam("id")Long id) {
+	public Location getLocationForId(@PathParam("id")Long id) {
 		return Location.findById(id);
+	}
+	
+	@GET
+	@Path("/code/{code}")
+    @Timed
+    @ExceptionMetered()
+    @Produces(MediaType.APPLICATION_JSON)
+	public Location getLocationForCode(@PathParam("code")String code) {
+		List<Location> locations = Location.where("code", code);
+		if (locations.isEmpty()) {
+			return null;
+		}
+		return locations.get(0);
 	}
 
 }

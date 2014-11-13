@@ -1,13 +1,13 @@
 package com.flipkart.geomapping.resources.filters;
 
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerResponse;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
-
 import org.activejpa.jpa.JPA;
 import org.activejpa.jpa.JPAContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerResponse;
+import com.sun.jersey.spi.container.ContainerResponseFilter;
 
 public class JpaContextResponseFilter implements ContainerResponseFilter {
 

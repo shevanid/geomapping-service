@@ -1,9 +1,9 @@
 package com.flipkart.geomapping.graph.objects;
 
-import com.flipkart.geomapping.graph.GraphException;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.flipkart.geomapping.graph.GraphException;
 
 /**
  * @author deepak.shevani on Nov 7, 2014

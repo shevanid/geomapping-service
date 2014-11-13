@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: omniscient
+Implementation-Version: 1.0-SNAPSHOT
+Implementation-Vendor-Id: com.flipkart.geomapping
+Built-By: shevanid
+Created-By: Apache Maven
+Agent-Class: org.activejpa.enhancer.ActiveJpaAgent
+Main-Class: com.flipkart.geomapping.GeoMappingService
+Archiver-Version: Plexus Archiver

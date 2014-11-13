@@ -1,5 +1,9 @@
 package com.flipkart.geomapping;
 
+import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
+
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,10 +16,6 @@ import com.flipkart.geomapping.configurations.GeoMappingConfiguration;
 import com.flipkart.geomapping.resources.filters.JpaContextRequestFilter;
 import com.flipkart.geomapping.resources.filters.JpaContextResponseFilter;
 import com.hubspot.dropwizard.guice.GuiceBundle;
-
-import io.dropwizard.Application;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
 
 /**
  * @author deepak.shevani on Nov 7, 2014
