@@ -17,7 +17,7 @@ import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
 import com.flipkart.geomapping.domain.Location;
 import com.flipkart.geomapping.service.GeoGraphService;
-import com.flipkart.geomapping.service.impl.JGraphTGeoGraphService;
+import com.flipkart.geomapping.service.impl.SimpleGraphService;
 
 /**
  * @author deepak.shevani on Nov 12, 2014
@@ -29,7 +29,7 @@ import com.flipkart.geomapping.service.impl.JGraphTGeoGraphService;
 @Produces({"application/json"})
 public class GeoMappingResource {
 	
-	private static GeoGraphService graphService = new JGraphTGeoGraphService();
+	private static GeoGraphService graphService = new SimpleGraphService();
 	
 	@GET
 	@Timed
@@ -52,8 +52,12 @@ public class GeoMappingResource {
 	@Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
-	public List<Location> getLocationForCode(@PathParam("location_code") String code) {
-		return graphService.getLocationsByCode(code);
+	public Location getLocationForCode(@PathParam("location_code") String code) {
+		List<Location> locations = graphService.getLocationsByCode(code);
+		if (locations.size() == 0 || locations.size() > 1) {
+			return null;
+		}
+		return locations.get(0);
 	}
 
 	@GET
@@ -135,24 +139,41 @@ public class GeoMappingResource {
 		if (possibleNodes.isEmpty()) {
 			return null;
 		}
-		parents = graphService.getParentsForLocation(possibleNodes.get(0).getId());
+		parents = graphService.getParentsForLocationId(possibleNodes.get(0).getId());
 		return parents.get(parent_name);
 	}
 	
 	@GET
-	@Path("/hierarchy/{location_code}")
+	@Path("/hierarchy/name/{location_name}")
 	@Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
-	public Map<String, Location> getAllParentsForLocation(
-			@PathParam("location_code") String location_code) 
+	public Map<String, Location> getAllParentsForLocationName(
+			@PathParam("location_name") String location_name) 
 	{
 		Map<String, Location> parents = new HashMap<String, Location>();
-		List<Location> possibleNodes = graphService.getLocationsByName(location_code);
+		List<Location> possibleNodes = graphService.getLocationsByName(location_name);
 		if (possibleNodes.isEmpty()) {
 			return parents;
 		}
-		parents = graphService.getParentsForLocation(possibleNodes.get(0).getId());
+		parents = graphService.getParentsForLocationId(possibleNodes.get(0).getId());
+		return parents;
+	}
+	
+	@GET
+	@Path("/hierarchy/code/{location_code}")
+	@Timed
+    @ExceptionMetered()
+    @Produces(MediaType.APPLICATION_JSON)
+	public Map<String, Location> getAllParentsForLocationCode(
+			@PathParam("location_code") String location_code) 
+	{
+		Map<String, Location> parents = new HashMap<String, Location>();
+		List<Location> possibleNodes = graphService.getLocationsByCode(location_code);
+		if (possibleNodes.isEmpty()) {
+			return parents;
+		}
+		parents = graphService.getParentsForLocationId(possibleNodes.get(0).getId());
 		return parents;
 	}
 	

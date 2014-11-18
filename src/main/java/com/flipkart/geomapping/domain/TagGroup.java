@@ -10,39 +10,51 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.activejpa.entity.Model;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
- * @author deepak.shevani on Nov 7, 2014
+ * @author deepak.shevani on Nov 11, 2014
  *
  */
 
 @Entity
-@Table(name="location_types")
+@Table(name="tag_groups")
 @Access(AccessType.FIELD)
 @JsonSnakeCase
-public class LocationType extends BaseDomain {
-	
+public class TagGroup extends BaseDomain {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	Long id;
+	private Long id;
 	
-	private String type;
+	private String name;
+		
+	public TagGroup() {
+		
+	}
 	
+	public TagGroup(String name) {
+		this.name = name;
+	}
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
-	}
-	
-	public String getType() {
-		return type;
-	}
-	
-	public void setType(String type) {
-		this.type = type;
 	}
 	
 }

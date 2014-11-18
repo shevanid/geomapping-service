@@ -14,11 +14,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.activejpa.entity.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name = "locations")
 @Access(AccessType.FIELD)
 @JsonSnakeCase
-public class Location extends Model {
+public class Location extends BaseDomain {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -41,7 +41,11 @@ public class Location extends Model {
 	
 	private String name;
 	
+	private String displayName;
+	
 	private String code;
+	
+	private int isActive;
 	
 	@ManyToOne
 	@JoinColumn(name="locationTypeId")
@@ -58,6 +62,13 @@ public class Location extends Model {
 	@JsonManagedReference("toLocation")
 	@JsonIgnoreProperties
 	private Set<LocationRelation> toLocations = new HashSet<LocationRelation>();
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinTable(name="location_tag_relations", 
+    	joinColumns={@JoinColumn(name="locationId")}, 
+    	inverseJoinColumns={@JoinColumn(name="tagId")})
+	@JsonManagedReference("tag")
+	private Set<Tag> tags = new HashSet<Tag>();
 	
 	@Override
 	public Long getId() {
@@ -76,6 +87,22 @@ public class Location extends Model {
 		this.name = name;
 	}
 	
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public int getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(int isActive) {
+		this.isActive = isActive;
+	}
+
 	public String getCode() {
 		return code;
 	}
@@ -108,6 +135,14 @@ public class Location extends Model {
 
 	public void setToLocations(Set<LocationRelation> toLocations) {
 		this.toLocations = toLocations;
+	}
+	
+	public Set<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
 	}
 
 	public String toString() {

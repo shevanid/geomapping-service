@@ -12,8 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.activejpa.entity.Model;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -25,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name = "location_relations")
 @Access(AccessType.FIELD)
 @JsonSnakeCase
-public class LocationRelation extends Model {
+public class LocationRelation extends BaseDomain {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

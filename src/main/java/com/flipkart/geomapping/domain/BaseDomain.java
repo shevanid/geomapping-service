@@ -11,9 +11,12 @@ import javax.persistence.MappedSuperclass;
 
 import org.activejpa.entity.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @MappedSuperclass
 public abstract class BaseDomain extends Model {
 
+	@JsonIgnore
 	private Timestamp createdAt;
 
 	public Timestamp getCreatedAt() {

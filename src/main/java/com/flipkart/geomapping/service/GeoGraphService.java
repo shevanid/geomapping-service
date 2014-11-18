@@ -24,6 +24,6 @@ public interface GeoGraphService {
 	
 	List<Location> getSpecificChildrenForLocationId(Long id, String name);
 	
-	Map<String, Location> getParentsForLocation(Long id);
+	Map<String, Location> getParentsForLocationId(Long id);
 	
 }

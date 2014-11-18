@@ -17,14 +17,14 @@ import com.google.inject.Inject;
  *
  */
 
-public class JGraphTGeoGraphService implements GeoGraphService {
+public class SimpleGraphService implements GeoGraphService {
 	
 	private Node<Location> root;
 	
 	private Map<Long, Node<Location>> locationMap = new HashMap<Long, Node<Location>>();
 	
 	@Inject
-	public JGraphTGeoGraphService() {
+	public SimpleGraphService() {
 		initializeGraph();
 	}
 	
@@ -35,7 +35,7 @@ public class JGraphTGeoGraphService implements GeoGraphService {
 		return sb.toString();
 	}
 	
-	public Map<String, Location> getParentsForLocation(Long id) {
+	public Map<String, Location> getParentsForLocationId(Long id) {
 		Map<String, Location> parents = new HashMap<String, Location>();
 		Node<Location> node = locationMap.get(id);
 		while (node.getParent() != null) {

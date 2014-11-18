@@ -31,6 +31,8 @@ public class GeoMappingService extends Application<GeoMappingConfiguration> {
 	@Override
 	public void initialize(Bootstrap<GeoMappingConfiguration> bootstrap) {
 		
+		/** Instantiate Active JPA agent **/
+		
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
 		map.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/geomapping");
@@ -41,6 +43,8 @@ public class GeoMappingService extends Application<GeoMappingConfiguration> {
 		ActiveJpaAgentLoader.instance().loadAgent();
 		JPA.instance.addPersistenceUnit("geomapping", map, true);
 		
+		/** Add Guice Bundle **/
+		
 		GuiceBundle<GeoMappingConfiguration> guiceBundle = GuiceBundle
 				.<GeoMappingConfiguration> newBuilder()
 				.addModule(new GeoMappingModule())
@@ -48,6 +52,8 @@ public class GeoMappingService extends Application<GeoMappingConfiguration> {
 				.setConfigClass(GeoMappingConfiguration.class)
 				.build();
 		bootstrap.addBundle(guiceBundle);
+		
+		/** Other Settings **/
 		
 		bootstrap.getObjectMapper().setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 		bootstrap.getObjectMapper().setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
