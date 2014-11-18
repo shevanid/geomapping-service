@@ -57,4 +57,9 @@ public class TagGroup extends BaseDomain {
 		this.id = id;
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 }

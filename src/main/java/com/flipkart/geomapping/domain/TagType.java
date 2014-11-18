@@ -12,9 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * @author deepak.shevani on Nov 11, 2014
@@ -23,7 +24,6 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 
 @Entity
 @Table(name="tag_types")
@@ -39,6 +39,7 @@ public class TagType extends BaseDomain {
 
 	@ManyToOne
 	@JoinColumn(name="tagGroupId")
+	@JsonIgnore
 	private TagGroup group;
 	
 	public TagType() {
@@ -62,4 +63,8 @@ public class TagType extends BaseDomain {
 		this.group = group;
 	}
 
+	public String toString() {
+		return group + "_" + type;
+	}
+	
 }

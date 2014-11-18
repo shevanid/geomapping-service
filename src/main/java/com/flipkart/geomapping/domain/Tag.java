@@ -7,7 +7,6 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,14 +17,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
@@ -48,7 +42,7 @@ public class Tag extends BaseDomain {
 	@ManyToOne
 	@JoinColumn(name="tagTypeId")
 	private TagType type;
-	
+
 	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinTable(name="location_tag_relations", 
     	joinColumns={@JoinColumn(name="tagId")}, 
@@ -66,7 +60,7 @@ public class Tag extends BaseDomain {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getValue() {
 		return value;
 	}
@@ -90,7 +84,7 @@ public class Tag extends BaseDomain {
 	public void setType(TagType type) {
 		this.type = type;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "{" + type.getType() + "=" + value + "(" + type.getGroup().getName()  + ")" + "}";
