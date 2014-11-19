@@ -35,25 +35,29 @@ public class LocationResource {
 	}
 	
 	@GET
+	@Path("/{code}")
+    @Timed
+    @ExceptionMetered()
+    @Produces(MediaType.APPLICATION_JSON)
+	public Location getLocationForCode(@PathParam("code")String code) {
+		Location location = null;
+		if (code != null && !code.isEmpty()) {
+			List<Location> locations = Location.where("code", code);
+			if (locations.isEmpty()) {
+				return null;
+			}
+			location = locations.get(0);
+		}
+		return location;
+	}
+	
+	@GET
 	@Path("/id/{id}")
     @Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
 	public Location getLocationForId(@PathParam("id")Long id) {
 		return Location.findById(id);
-	}
-	
-	@GET
-	@Path("/code/{code}")
-    @Timed
-    @ExceptionMetered()
-    @Produces(MediaType.APPLICATION_JSON)
-	public Location getLocationForCode(@PathParam("code")String code) {
-		List<Location> locations = Location.where("code", code);
-		if (locations.isEmpty()) {
-			return null;
-		}
-		return locations.get(0);
 	}
 
 }

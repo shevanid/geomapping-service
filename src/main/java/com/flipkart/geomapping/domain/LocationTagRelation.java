@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name = "location_tag_relations")
 @Access(AccessType.FIELD)
 @JsonSnakeCase
-public class LocationTagRelation {
+public class LocationTagRelation extends BaseDomain {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

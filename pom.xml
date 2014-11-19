@@ -126,10 +126,15 @@
 			<version>0.8.3</version>
 		</dependency>
 		<dependency>
-            <groupId>tools</groupId>
-            <artifactId>tools</artifactId>
-            <version>tools</version>
-        </dependency>
+			<groupId>tools</groupId>
+			<artifactId>tools</artifactId>
+			<version>tools</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

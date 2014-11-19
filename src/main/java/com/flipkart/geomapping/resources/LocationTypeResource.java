@@ -19,17 +19,18 @@ import com.google.inject.Singleton;
  *
  */
 
-@Path("/location_types")
+@Path("/locationtypes")
 @JsonSnakeCase
 @Produces({"application/json"})
 @Singleton
 public class LocationTypeResource {
 
 	@GET
+	@Path("/")
     @Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
-	public List<LocationType> getAllLocations() {
+	public List<LocationType> getAllLocationType() {
 		return LocationType.all();
 	}
 	

@@ -176,7 +176,7 @@ public class Location extends BaseDomain {
 	public String toString() {
 		return "{" + id + ":" + name + "}";
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

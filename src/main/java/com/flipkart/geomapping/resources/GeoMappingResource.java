@@ -4,34 +4,47 @@ import io.dropwizard.jackson.JsonSnakeCase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
 import com.flipkart.geomapping.domain.Location;
+import com.flipkart.geomapping.domain.Tag;
+import com.flipkart.geomapping.domain.TagGroup;
+import com.flipkart.geomapping.domain.TagType;
 import com.flipkart.geomapping.service.GeoGraphService;
-import com.flipkart.geomapping.service.impl.SimpleGraphService;
+import com.google.inject.Inject;
 
 /**
  * @author deepak.shevani on Nov 12, 2014
  *
  */
 
-@Path("/graph")
+@Path("/geomapping")
 @JsonSnakeCase
 @Produces({"application/json"})
 public class GeoMappingResource {
 	
-	private static GeoGraphService graphService = new SimpleGraphService();
+	private GeoGraphService graphService;
+	
+	@Inject
+	public GeoMappingResource(GeoGraphService graphService) {
+		this.graphService = graphService;
+	}
 	
 	@GET
+	@Path("/graph")
 	@Timed
     @ExceptionMetered()
 	public String test(String body) {
@@ -39,142 +52,169 @@ public class GeoMappingResource {
 	}
 	
 	@GET
-	@Path("/name/{location_name}")
+	@Path("/children/{location_code}")
 	@Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
-	public List<Location> getLocationForName(@PathParam("location_name") String name) {
-		return graphService.getLocationsByName(name);
+	public List<Location> getChildrenForLocationName(@PathParam("location_code") String code) {
+		List<Location> locations = new ArrayList<Location>();
+		List<Location> possibleNodes = graphService.getLocationsByCode(code);
+		if (!possibleNodes.isEmpty()) {
+			Location location = possibleNodes.get(0);
+			locations = graphService.getChildrenForLocationId(location.getId());
+		}
+		return locations;
 	}
 	
 	@GET
-	@Path("/code/{location_code}")
+	@Path("/children/{location_code}/pincodes")
 	@Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
-	public Location getLocationForCode(@PathParam("location_code") String code) {
-		List<Location> locations = graphService.getLocationsByCode(code);
-		if (locations.size() == 0 || locations.size() > 1) {
-			return null;
+	public List<Location> getPinCodesForLocationCode(@PathParam("location_code") String code) {
+		List<Location> locations = new ArrayList<Location>();
+		List<Location> possibleNodes = graphService.getLocationsByCode(code);
+		if (!possibleNodes.isEmpty()) {
+			Location location = possibleNodes.get(0);
+			locations = graphService.getSpecificChildrenForLocationId(location.getId(), "pincode");
 		}
-		return locations.get(0);
+		return locations;
+	}
+	
+	@GET
+	@Path("/children/{location_code}/states")
+	@Timed
+    @ExceptionMetered()
+    @Produces(MediaType.APPLICATION_JSON)
+	public List<Location> getStatesForLocationCode(@PathParam("location_code") String code) {
+		List<Location> locations = new ArrayList<Location>();
+		List<Location> possibleNodes = graphService.getLocationsByCode(code);
+		if (!possibleNodes.isEmpty()) {
+			Location location = possibleNodes.get(0);
+			locations = graphService.getSpecificChildrenForLocationId(location.getId(), "state");
+		}
+		return locations;
 	}
 
 	@GET
-	@Path("/id/{location_id}")
+	@Path("/children/{location_code}/cities")
 	@Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
-	public Location getLocationForCode(@PathParam("location_id") Long id) {
-		return graphService.getLocationById(id);
-	}
-	
-	@GET
-	@Path("/children/{location_name}")
-	@Timed
-    @ExceptionMetered()
-    @Produces(MediaType.APPLICATION_JSON)
-	public List<Location> getChildrenForLocationName(@PathParam("location_name") String name) {
+	public List<Location> getCitiesForLocationCode(@PathParam("location_code") String code) {
 		List<Location> locations = new ArrayList<Location>();
-		List<Location> possibleNodes = graphService.getLocationsByName(name);
-		for (Location l : possibleNodes) {
-			locations.addAll(graphService.getChildrenForLocationId(l.getId()));
+		List<Location> possibleNodes = graphService.getLocationsByCode(code);
+		if (!possibleNodes.isEmpty()) {
+			Location location = possibleNodes.get(0);
+			locations = graphService.getSpecificChildrenForLocationId(location.getId(), "city");
 		}
 		return locations;
 	}
 	
-	@GET
-	@Path("/pincodes/{location_name}")
-	@Timed
-    @ExceptionMetered()
-    @Produces(MediaType.APPLICATION_JSON)
-	public List<Location> getPinCodesForLocationId(@PathParam("location_name") String name) {
-		List<Location> locations = new ArrayList<Location>();
-		List<Location> possibleNodes = graphService.getLocationsByName(name);
-		for (Location l : possibleNodes) {
-			locations.addAll(graphService.getSpecificChildrenForLocationId(l.getId(), "pincode"));
-		}
-		return locations;
-	}
 	
 	@GET
-	@Path("/states/{location_name}")
+	@Path("/hierarchy/{location_code}")
 	@Timed
     @ExceptionMetered()
     @Produces(MediaType.APPLICATION_JSON)
-	public List<Location> getStatesForLocationId(@PathParam("location_name") String name) {
-		List<Location> locations = new ArrayList<Location>();
-		List<Location> possibleNodes = graphService.getLocationsByName(name);
-		for (Location l : possibleNodes) {
-			locations.addAll(graphService.getSpecificChildrenForLocationId(l.getId(), "state"));
-		}
-		return locations;
-	}
-	
-	@GET
-	@Path("/cities/{location_name}")
-	@Timed
-    @ExceptionMetered()
-    @Produces(MediaType.APPLICATION_JSON)
-	public List<Location> getCitiesForLocationId(@PathParam("location_name") String name) {
-		List<Location> locations = new ArrayList<Location>();
-		List<Location> possibleNodes = graphService.getLocationsByName(name);
-		for (Location l : possibleNodes) {
-			locations.addAll(graphService.getSpecificChildrenForLocationId(l.getId(), "city"));
-		}
-		return locations;
-	}
-	
-	@GET
-	@Path("/hierarchy/{location_name}/{parent_name}")
-	@Timed
-    @ExceptionMetered()
-    @Produces(MediaType.APPLICATION_JSON)
-	public Location getParentForLocation(
-			@PathParam("location_name") String location_name ,
-			@PathParam("parent_name") String parent_name)
-	{
-		Map<String, Location> parents = new HashMap<String, Location>();
-		List<Location> possibleNodes = graphService.getLocationsByName(location_name);
-		if (possibleNodes.isEmpty()) {
-			return null;
-		}
-		parents = graphService.getParentsForLocationId(possibleNodes.get(0).getId());
-		return parents.get(parent_name);
-	}
-	
-	@GET
-	@Path("/hierarchy/name/{location_name}")
-	@Timed
-    @ExceptionMetered()
-    @Produces(MediaType.APPLICATION_JSON)
-	public Map<String, Location> getAllParentsForLocationName(
-			@PathParam("location_name") String location_name) 
-	{
-		Map<String, Location> parents = new HashMap<String, Location>();
-		List<Location> possibleNodes = graphService.getLocationsByName(location_name);
-		if (possibleNodes.isEmpty()) {
-			return parents;
-		}
-		parents = graphService.getParentsForLocationId(possibleNodes.get(0).getId());
-		return parents;
-	}
-	
-	@GET
-	@Path("/hierarchy/code/{location_code}")
-	@Timed
-    @ExceptionMetered()
-    @Produces(MediaType.APPLICATION_JSON)
-	public Map<String, Location> getAllParentsForLocationCode(
+	public Map<String, Map<String, Location>> getAllParentsForLocationCode(
 			@PathParam("location_code") String location_code) 
 	{
-		Map<String, Location> parents = new HashMap<String, Location>();
-		List<Location> possibleNodes = graphService.getLocationsByCode(location_code);
-		if (possibleNodes.isEmpty()) {
-			return parents;
+		Map<String, Map<String, Location>> hierarchy = new HashMap<String, Map<String, Location>>();
+		String[] codes = location_code.split(",");
+		if (codes.length > 0) {
+			for (String code : codes) {
+				List<Location> possibleNodes = graphService.getLocationsByCode(code);
+				if (!possibleNodes.isEmpty()) {
+					hierarchy.put(code, graphService.getParentsForLocationId(possibleNodes.get(0).getId()));
+				}
+			}
 		}
-		parents = graphService.getParentsForLocationId(possibleNodes.get(0).getId());
-		return parents;
+		return hierarchy;
+	}
+	
+	@GET
+	@Path("/tags/{location_code}")
+	@Timed
+    @ExceptionMetered()
+    @Produces(MediaType.APPLICATION_JSON)
+	public Map<String, Map<TagGroup, Set<Tag>>> getAllTagsForLocationCode(
+			@PathParam("location_code") String location_code) 
+	{
+		Map<String, Map<TagGroup, Set<Tag>>> tags = new HashMap<String, Map<TagGroup, Set<Tag>>>();
+		String[] codes = location_code.split(",");
+		if (codes.length > 0) {
+			for (String code : codes) {
+				List<Location> possibleNodes = graphService.getLocationsByCode(code);
+				if (!possibleNodes.isEmpty()) {
+					tags.put(code, possibleNodes.get(0).getGroupedTags());
+				}	
+			}
+		}
+		return tags;
+	}
+	
+	@GET
+	@Path("/tags/{location_code}/{group_name}")
+	@Timed
+    @ExceptionMetered()
+    @Produces(MediaType.APPLICATION_JSON)
+	public Map<String, Set<Tag>> getSpecificTagsForLocationCode(
+			@PathParam("location_code") String location_code,
+			@PathParam("group_name") String group_name) 
+	{
+		Map<String, Set<Tag>> tags = new HashMap<String, Set<Tag>>();
+		List<TagGroup> groups = TagGroup.where("name", group_name);
+		if (groups.isEmpty()) {
+			return tags;
+		}
+		String[] codes = location_code.split(",");
+		if (codes.length > 0) {
+			for (String code : codes) {
+				List<Location> possibleNodes = graphService.getLocationsByCode(code);
+				Set<Tag> possibleTags = new HashSet<Tag>();
+				if (!possibleNodes.isEmpty() && possibleNodes.get(0).getGroupedTags().containsKey(groups.get(0))) {
+					possibleTags.addAll(possibleNodes.get(0).getGroupedTags().get(groups.get(0)));
+				}
+				tags.put(code, possibleTags);
+			}
+		}
+		return tags;
+	}
+	
+	@GET
+	@Path("/locationtags/{tag_key}/{tag_value}")
+	@Timed
+    @ExceptionMetered()
+    @Produces(MediaType.APPLICATION_JSON)
+	public Set<Location> getLocationForTag(
+			@PathParam("tag_key") String tagKey,
+			@PathParam("tag_value") String tagValue,
+			@DefaultValue("common") @QueryParam("group") String groupName) 
+	{
+		Set<Location> taggedLocations = new HashSet<Location>();
+		
+		List<TagGroup> groups = TagGroup.where("name", groupName);
+		if (groups.isEmpty()) {
+			return taggedLocations;
+		}
+		TagGroup group = groups.get(0);
+		
+		List<TagType> tagTypes = TagType.where("type", tagKey, "group", group);
+		if (tagTypes.isEmpty()) {
+			return taggedLocations;
+		}
+		TagType tagType = tagTypes.get(0);
+		
+		List<Tag> tags = Tag.where("value", tagValue, "type", tagType);
+		if (tags.isEmpty()) {
+			return taggedLocations;
+		}
+		Tag tag = tags.get(0);
+		
+		taggedLocations.addAll(tag.getLocations());
+		
+		return taggedLocations;
 	}
 	
 }
