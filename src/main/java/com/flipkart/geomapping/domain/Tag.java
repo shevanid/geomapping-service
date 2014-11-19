@@ -87,7 +87,7 @@ public class Tag extends BaseDomain {
 	
 	@Override
 	public String toString() {
-		return "{" + type.getType() + "=" + value + "(" + type.getGroup().getName()  + ")" + "}";
+		return type.getType() + "=" + value + "(" + type.getGroup().getName()  + ") ";
 	}
 	
 }

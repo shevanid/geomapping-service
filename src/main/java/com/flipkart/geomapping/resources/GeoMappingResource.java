@@ -20,9 +20,11 @@ import javax.ws.rs.core.MediaType;
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
 import com.flipkart.geomapping.domain.Location;
+import com.flipkart.geomapping.domain.LocationRelation;
 import com.flipkart.geomapping.domain.Tag;
 import com.flipkart.geomapping.domain.TagGroup;
 import com.flipkart.geomapping.domain.TagType;
+import com.flipkart.geomapping.server.PrintGraphResponse;
 import com.flipkart.geomapping.service.GeoGraphService;
 import com.google.inject.Inject;
 
@@ -38,6 +40,8 @@ public class GeoMappingResource {
 	
 	private GeoGraphService graphService;
 	
+	private static PrintGraphResponse graph;
+	
 	@Inject
 	public GeoMappingResource(GeoGraphService graphService) {
 		this.graphService = graphService;
@@ -46,9 +50,35 @@ public class GeoMappingResource {
 	@GET
 	@Path("/graph")
 	@Timed
+	@Produces("application/json")
     @ExceptionMetered()
-	public String test(String body) {
-		return graphService.printGraph();
+	public PrintGraphResponse printGraph(String body,
+			@DefaultValue("false") @QueryParam("refresh") boolean refresh) {
+		if (graph == null || refresh) {
+			Location root = Location.findById(1L);
+			PrintGraphResponse response = printGraphHelper(root);
+			graph = response;
+		}
+		return graph;
+	}
+	
+	private PrintGraphResponse printGraphHelper(Location node) {
+		PrintGraphResponse response = new PrintGraphResponse();
+		response.setName(node.getDisplayName());
+		response.setTags(getTagsForLocation(node));
+		Set<LocationRelation> childRelations = node.getToLocations();
+		for (LocationRelation r : childRelations) {
+			response.addPrintGraphResponse(printGraphHelper(r.getFromLocation()));
+		}
+		return response;
+	}
+	
+	private String getTagsForLocation(Location location) {
+		StringBuilder sb = new StringBuilder();
+		for (Tag tag : location.getTags()) {
+			sb.append(tag);
+		}
+		return sb.toString();
 	}
 	
 	@GET
