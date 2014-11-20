@@ -12,6 +12,7 @@ import java.util.TimeZone;
 import org.activejpa.enhancer.ActiveJpaAgentLoader;
 import org.activejpa.jpa.JPA;
 
+import com.bazaarvoice.dropwizard.assets.ConfiguredAssetsBundle;
 import com.flipkart.geomapping.configurations.GeoMappingConfiguration;
 import com.flipkart.geomapping.resources.filters.JpaContextRequestFilter;
 import com.flipkart.geomapping.resources.filters.JpaContextResponseFilter;
@@ -52,7 +53,7 @@ public class GeoMappingService extends Application<GeoMappingConfiguration> {
 				.setConfigClass(GeoMappingConfiguration.class)
 				.build();
 		bootstrap.addBundle(guiceBundle);
-		
+		bootstrap.addBundle(new ConfiguredAssetsBundle("/UI","/ui"));
 		/** Other Settings **/
 		
 		bootstrap.getObjectMapper().setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
